@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة التحكم | إدارة الاشتراكات والطلبات</title>
+  <link rel="stylesheet" href="/css/admin.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+</head>
+<body>
+
+  <!-- شاشة تسجيل الدخول -->
+  <section id="loginScreen" class="login-screen">
+    <div class="login-card">
+      <div class="login-header">
+        <div class="login-icon">🛡️</div>
+        <h2>تسجيل دخول الإدارة</h2>
+        <p>الوصول مقتصر على المشرفين المصرح لهم فقط</p>
+      </div>
+
+      <form id="loginForm">
+        <div class="admin-form-group">
+          <label for="adminEmail">البريد الإلكتروني</label>
+          <input type="email" id="adminEmail" class="admin-form-input" placeholder="admin1@pro.com" required dir="ltr">
+        </div>
+
+        <div class="admin-form-group">
+          <label for="adminPassword">كلمة المرور</label>
+          <input type="password" id="adminPassword" class="admin-form-input" placeholder="••••••••" required dir="ltr">
+        </div>
+
+        <button type="submit" id="btnLogin" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 10px;">
+          <span>دخول لوحة التحكم</span>
+          <span>←</span>
+        </button>
+
+        <div style="margin-top: 18px; padding: 12px 14px; background: var(--admin-primary-tint); border: 1px solid var(--admin-primary-border); border-radius: var(--radius-sm); font-size: 0.82rem; color: var(--admin-navy-dark); line-height: 1.6;">
+          <strong>حسابات الأدمن الافتراضية:</strong><br>
+          1. <code>admin1@pro.com</code> | كلمة السر: <code>admin1234@password</code><br>
+          2. <code>admin2@pro.com</code> | كلمة السر: <code>admin5678@password</code>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- تخطيط لوحة التحكم (Dashboard) -->
+  <div id="dashboardLayout" class="dashboard-layout">
+    <!-- الشريط العلوي -->
+    <header class="admin-navbar">
+      <div class="admin-brand">
+        <span style="font-size: 1.5rem;">⚡</span>
+        <h3>لوحة إدارة الاشتراكات - برو ستور</h3>
+      </div>
+
+      <div class="admin-user-profile">
+        <a href="/" target="_blank" style="color: var(--text-muted); text-decoration: none; font-size: 0.85rem; display: flex; align-items: center; gap: 4px;">
+          <span>المتجر الرئيسي</span>
+          <span>↗</span>
+        </a>
+        <span id="adminNameDisplay" class="admin-badge-name">المدير: --</span>
+        <button type="button" id="btnLogout" class="btn-logout">تسجيل الخروج</button>
+      </div>
+    </header>
+
+    <!-- المحتوى الداخلي -->
+    <main class="admin-content">
+      <!-- كروت الإحصائيات السريعة -->
+      <section class="admin-stats-grid">
+        <div class="stat-box">
+          <div class="stat-icon-wrap pending">⏳</div>
+          <div class="stat-data">
+            <h4>طلبات قيد المراجعة</h4>
+            <div id="statPending" class="number">0</div>
+          </div>
+        </div>
+
+        <div class="stat-box">
+          <div class="stat-icon-wrap activated">✅</div>
+          <div class="stat-data">
+            <h4>طلبات تم تفعيلها</h4>
+            <div id="statActivated" class="number">0</div>
+          </div>
+        </div>
+
+        <div class="stat-box">
+          <div class="stat-icon-wrap revenue">💰</div>
+          <div class="stat-data">
+            <h4>إجمالي المبيعات المحققة</h4>
+            <div id="statRevenue" class="number">0 ج.م</div>
+          </div>
+        </div>
+
+        <div class="stat-box">
+          <div class="stat-icon-wrap packages">📦</div>
+          <div class="stat-data">
+            <h4>عدد الباقات المعروضة</h4>
+            <div id="statPackages" class="number">0</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- تبويبات التنقل -->
+      <nav class="admin-tabs">
+        <button type="button" class="tab-btn active" data-tab="tab-pending">
+          <span>طلبات جديدة (قيد الانتظار)</span>
+          <span id="badgePendingCount" class="tab-count-badge">0</span>
+        </button>
+        <button type="button" class="tab-btn" data-tab="tab-activated">
+          <span>الطلبات المفعلة</span>
+          <span id="badgeActivatedCount" class="tab-count-badge">0</span>
+        </button>
+        <button type="button" class="tab-btn" data-tab="tab-packages">
+          <span>إدارة الباقات والأسعار</span>
+        </button>
+        <button type="button" class="tab-btn" data-tab="tab-settings">
+          <span>إعدادات الدفع والموقع</span>
+        </button>
+      </nav>
+
+      <!-- 1. تبويب الطلبات المعلقة (Pending) -->
+      <section id="tab-pending" class="tab-content admin-card-section">
+        <div class="section-top-row">
+          <h3>
+            <span>⏳</span>
+            <span>الطلبات المعلقة بانتظار التفعيل</span>
+          </h3>
+          <button type="button" class="btn-primary" onclick="loadAdminData()" style="padding: 6px 14px; font-size: 0.85rem;">
+            تحديث البيانات 🔄
+          </button>
+        </div>
+
+        <div class="table-responsive">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>كود الطلب</th>
+                <th>اسم العميل</th>
+                <th>رقم الواتساب</th>
+                <th>البريد (Gmail)</th>
+                <th>صورة التحويل</th>
+                <th>الرقم المحول منه</th>
+                <th>الباقة المطلوبة</th>
+                <th>السعر</th>
+                <th>تاريخ الطلب</th>
+                <th>الإجراء</th>
+              </tr>
+            </thead>
+            <tbody id="pendingOrdersBody">
+              <tr>
+                <td colspan="10" style="text-align: center; color: var(--text-muted); padding: 30px;">
+                  جاري تحميل الطلبات...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 2. تبويب الطلبات المفعلة (Activated) -->
+      <section id="tab-activated" class="tab-content admin-card-section" style="display: none;">
+        <div class="section-top-row">
+          <h3>
+            <span>✅</span>
+            <span>الطلبات التي تم تفعيلها</span>
+          </h3>
+          <span style="font-size: 0.85rem; color: var(--text-muted);">
+            يتضمن تاريخ التفعيل واسم الأدمن الذي قام بالتفعيل
+          </span>
+        </div>
+
+        <div class="table-responsive">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>كود الطلب</th>
+                <th>اسم العميل</th>
+                <th>رقم الواتساب</th>
+                <th>البريد (Gmail)</th>
+                <th>صورة التحويل</th>
+                <th>الرقم المحول منه</th>
+                <th>الباقة</th>
+                <th>السعر</th>
+                <th>تاريخ الطلب</th>
+                <th>تاريخ التفعيل</th>
+                <th>مفعّل بواسطة (الأدمن)</th>
+              </tr>
+            </thead>
+            <tbody id="activatedOrdersBody">
+              <tr>
+                <td colspan="11" style="text-align: center; color: var(--text-muted); padding: 30px;">
+                  لا توجد طلبات مفعلة بعد.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 3. تبويب إدارة الباقات (Packages Management) -->
+      <section id="tab-packages" class="tab-content admin-card-section" style="display: none;">
+        <div class="section-top-row">
+          <h3>
+            <span>📦</span>
+            <span>إضافة وتعديل الباقات المعروضة</span>
+          </h3>
+        </div>
+
+        <!-- نموذج إضافة باقة جديدة -->
+        <div style="background: var(--admin-subtle); padding: 24px; border-radius: var(--radius-md); border: 1px solid var(--admin-border); margin-bottom: 30px;">
+          <h4 style="margin-bottom: 16px; font-size: 1.1rem; color: var(--admin-navy-heading); font-weight: 700;">+ إضافة باقة اشتراك جديدة</h4>
+          <form id="addPackageForm" enctype="multipart/form-data">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 16px;">
+              <div class="admin-form-group">
+                <label>اسم الباقة *</label>
+                <input type="text" name="name" class="admin-form-input" placeholder="مثال: Claude 3.5 Sonnet Pro" required>
+              </div>
+
+              <div class="admin-form-group">
+                <label>تصنيف الباقة</label>
+                <input type="text" name="category" class="admin-form-input" placeholder="مثال: ذكاء اصطناعي / تصميم">
+              </div>
+
+              <div class="admin-form-group">
+                <label>السعر قبل الخصم (ج.م)</label>
+                <input type="number" name="originalPrice" class="admin-form-input" placeholder="700">
+              </div>
+
+              <div class="admin-form-group">
+                <label>السعر بعد الخصم (ج.م) *</label>
+                <input type="number" name="discountedPrice" class="admin-form-input" placeholder="280" required>
+              </div>
+            </div>
+
+            <div class="admin-form-group">
+              <label>وصف الباقة</label>
+              <textarea name="description" class="admin-form-textarea" placeholder="اكتب نبذة مختصرة عن مميزات الحساب وصلاحياته..."></textarea>
+            </div>
+
+            <div class="admin-form-group">
+              <label>مميزات الباقة (كل ميزة في سطر منفصل)</label>
+              <textarea name="features" class="admin-form-textarea" placeholder="مثال:
+توليد صور بجودة فائقة
+وصول غير محدود وسريع
+ضمان استبدال فوري"></textarea>
+            </div>
+
+            <div class="admin-form-group">
+              <label>صورة أو لوجو الباقة (اختياري)</label>
+              <input type="file" name="packageImage" class="admin-form-input" accept="image/*">
+            </div>
+
+            <button type="submit" id="btnAddPackage" class="btn-primary" style="margin-top: 10px;">
+              <span>حفظ وإضافة الباقة للمتجر</span>
+              <span>💾</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- قائمة الباقات الحالية -->
+        <h4 style="margin-bottom: 16px; font-size: 1.1rem; color: var(--admin-navy-heading); font-weight: 700;">الباقات المعروضة حالياً بالمتجر:</h4>
+        <div id="adminPackagesList" class="admin-packages-list"></div>
+      </section>
+
+      <!-- 4. تبويب إعدادات الدفع والموقع -->
+      <section id="tab-settings" class="tab-content admin-card-section" style="display: none;">
+        <div class="section-top-row">
+          <h3>
+            <span>⚙️</span>
+            <span>إعدادات أرقام الدفع وخدمة العملاء</span>
+          </h3>
+        </div>
+
+        <form id="settingsForm" style="max-width: 600px;">
+          <div class="admin-form-group">
+            <label>رقم محفظة فودافون كاش / المحافظ</label>
+            <input type="text" id="settingVodafone" name="vodafoneCash" class="admin-form-input" dir="ltr" required>
+          </div>
+
+          <div class="admin-form-group">
+            <label>معرّف حساب إنستاباي (Instapay Account)</label>
+            <input type="text" id="settingInstapay" name="instapayAccount" class="admin-form-input" dir="ltr" required>
+          </div>
+
+          <div class="admin-form-group">
+            <label>رقم الدعم الفني على واتساب (مع كود الدولة مثل 201012345678)</label>
+            <input type="text" id="settingWhatsapp" name="whatsappSupport" class="admin-form-input" dir="ltr" required>
+          </div>
+
+          <div class="admin-form-group">
+            <label>ملاحظة سرعة التفعيل للعملاء</label>
+            <input type="text" id="settingNotice" name="activationTimeNotice" class="admin-form-input">
+          </div>
+
+          <button type="submit" class="btn-primary" style="margin-top: 10px;">
+            <span>حفظ الإعدادات</span>
+            <span>💾</span>
+          </button>
+        </form>
+      </section>
+    </main>
+  </div>
+
+  <!-- نافذة معاينة صورة الإيصال بحجم كبير -->
+  <div id="imageModal" class="image-modal-overlay" onclick="closeImageModal()">
+    <div class="image-modal-content" onclick="event.stopPropagation()">
+      <button type="button" class="btn-close-img-modal" onclick="closeImageModal()">إغلاق (ESC) ✕</button>
+      <img id="imageModalImg" src="" alt="إيصال التحويل" class="image-modal-img">
+    </div>
+  </div>
+
+  <script src="/js/admin.js"></script>
+</body>
+</html>

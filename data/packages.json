@@ -1,0 +1,70 @@
+[
+  {
+    "id": "pkg_gemini_pro",
+    "name": "Google Gemini Advanced",
+    "category": "ذكاء اصطناعي",
+    "description": "وصول كامل لـ Gemini 1.5 Pro مع نافذة سياق 1M Tokens ومساحة 2TB Google One.",
+    "originalPrice": 850,
+    "discountedPrice": 280,
+    "image": "/assets/images/gemini.svg",
+    "createdBy": "النظام الافتراضي",
+    "active": true,
+    "features": [
+      "مساحة 2TB على Google Drive",
+      "نموذج Gemini 1.5 Pro فائق السرعة",
+      "دعم كتابة وبرمجة وتحليل ملفات"
+    ],
+    "createdAt": "2026-10-17T14:06:32.782Z"
+  },
+  {
+    "id": "pkg_adobe_cc",
+    "name": "Adobe Creative Cloud (الكل)",
+    "category": "تصميم ومونتاج",
+    "description": "حساب رسمي لجميع برامج أدوبي (Photoshop, Illustrator, Premiere, After Effects) وميزات Firefly الذكاء الاصطناعي.",
+    "originalPrice": 1200,
+    "discountedPrice": 390,
+    "image": "/assets/images/adobe.svg",
+    "createdBy": "النظام الافتراضي",
+    "active": true,
+    "features": [
+      "أكثر من 20 برنامج احترافي",
+      "ميزات Firefly لتوليد الصور بالذكاء الاصطناعي",
+      "تحديثات مستمرة ومساحة سحابية"
+    ],
+    "createdAt": "2026-10-17T14:06:32.783Z"
+  },
+  {
+    "id": "pkg_chatgpt_plus",
+    "name": "ChatGPT Plus (GPT-4o)",
+    "category": "ذكاء اصطناعي",
+    "description": "الوصول المتميز لنموذج GPT-4o وتوليد الصور DALL-E وتحليل البيانات والإنترنت المباشر.",
+    "originalPrice": 1000,
+    "discountedPrice": 350,
+    "image": "/assets/images/chatgpt.svg",
+    "createdBy": "النظام الافتراضي",
+    "active": true,
+    "features": [
+      "وصول أولوية لـ GPT-4o",
+      "توليد الصور DALL-E 3 بدقة عالية",
+      "تحليل البيانات والمستندات البرمجية"
+    ],
+    "createdAt": "2026-10-17T14:06:32.783Z"
+  },
+  {
+    "id": "pkg_canva_pro",
+    "name": "Canva Pro (كانفا برو)",
+    "category": "تصميم سريع",
+    "description": "وصول غير محدود لجميع القوالب المدفوعة وإزالة الخلفية بضغطة زر وتنزيل بدقة 4K.",
+    "originalPrice": 350,
+    "discountedPrice": 99,
+    "image": "/assets/images/canva.svg",
+    "createdBy": "النظام الافتراضي",
+    "active": true,
+    "features": [
+      "أكثر من 100 مليون صورة وعنصر مدفوع",
+      "ميزة إزالة خلفية الصور والفيديوهات",
+      "تصدير بجودة فائقة وتغيير الأحجام بضغطة واحدة"
+    ],
+    "createdAt": "2026-10-17T14:06:32.783Z"
+  }
+]
